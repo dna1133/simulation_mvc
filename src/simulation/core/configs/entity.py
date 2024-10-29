@@ -29,8 +29,8 @@ class EntitySettings(BaseSettings):
         "Grass": 0,
         "Rock": 0,
         "Tree": 0,
-        "Herbivore": 0,
-        "Predator": 15,
+        "Herbivore": 2,
+        "Predator": 4,
     }
     ENTITY_TARGET: dict[str, str] = {
         "Herbivore": "Grass",

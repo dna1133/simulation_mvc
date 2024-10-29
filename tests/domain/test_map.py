@@ -3,6 +3,8 @@ import pytest
 from simulation.domain.entity.creatures import Predator
 from simulation.domain.map.map import Cell, Map
 
+from simulation.core.configs import settings
+
 
 @pytest.fixture
 def mock_creature_stats():
@@ -25,8 +27,12 @@ def test_cell_create_success(mock_creature_stats):
 
 def test_map_create(mock_creature_stats):
     predator = Predator(**mock_creature_stats)
-    c = Cell(x_pos=1, y_pos=11, contain=predator)
-    created_map = Map()
-    created_map.cells.append(c)
-    created_map.cells.append(c)
-    assert created_map.cells == [c, c]
+    map = Map()
+    map.create_map()
+    assert isinstance(map._filled_cells, set)
+    assert isinstance(map.cells, list)
+    assert len(map) == settings.MAP_HEIGHT * settings.MAP_WIDTH
+    for i in range(len(map)):
+        if isinstance(map.cells[i].contain, Predator):
+            assert map.cells[i].contain.name == "Predator"
+            assert map.cells[i].contain.attack_rate == 4

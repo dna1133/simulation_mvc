@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from random import choice
+
 from simulation.domain.entity.base import Entity
 from simulation.domain.entity.creatures import Direction, Herbivore, Predator
 from simulation.domain.entity.landscape import Grass, Rock, Tree
@@ -18,15 +19,15 @@ _entity_dict = {
 
 @dataclass
 class EntityBuilder:
-    def add_entity(position: tuple, name: str) -> Entity:
+    def add_entity(self, position: tuple[int, int], name: str) -> Entity:
         x_pos, y_pos = position
-        if name == "Tree" or "Rock":
+        if name == "Tree" or name == "Rock":
             return _entity_dict[name](x_pos=x_pos, y_pos=y_pos)
         elif name == "Grass":
             return _entity_dict[name](
                 x_pos=x_pos, y_pos=y_pos, health=settings.ENTITY_HEALTH[name]
             )
-        elif name == "Herbivore" or "Predator":
+        elif name == "Herbivore" or name == "Predator":
             return _entity_dict[name](
                 x_pos=x_pos,
                 y_pos=y_pos,

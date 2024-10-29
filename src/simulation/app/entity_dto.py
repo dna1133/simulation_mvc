@@ -29,7 +29,7 @@ class EntityDTO:
         }
         if entity.name == "Grass":
             stats["stats"]["health"] = entity.health
-        elif entity.name == ("Herbivore" or "Predator"):
+        elif entity.name == "Herbivore" or entity.name == "Predator":
             stats["stats"]["health"] = entity.health
             stats["stats"]["speed"] = entity.speed
             stats["stats"]["target_name"] = entity.target_name
@@ -42,6 +42,6 @@ class EntityDTO:
     @staticmethod
     def dto_to_entity(dto: dict, entity_dict=_entity_dict) -> Entity:
         entity = entity_dict[dto["name"]](**dto["stats"])
-        if entity.name == ("Herbivore" or "Predator"):
+        if entity.name == "Herbivore" or entity.name == "Predator":
             entity.direction = Direction(dto["stats"]["direction"])
         return entity

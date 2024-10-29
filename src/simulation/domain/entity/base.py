@@ -27,3 +27,6 @@ class Entity(ABC):
     def destroy(self) -> None:
         self.x_pos = None
         self.y_pos = None
+
+    def __str__(self):
+        return self.name

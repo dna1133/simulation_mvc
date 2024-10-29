@@ -1,6 +1,7 @@
 import pytest
 
 from simulation.domain.entity.creatures import Direction, Herbivore, Predator
+from simulation.domain.entity.entity_builder import EntityBuilder
 from simulation.domain.entity.landscape import Grass, Rock, Tree
 
 
@@ -83,3 +84,24 @@ def test_creature_attack():
     )
     predator.attack(herbivore)
     assert herbivore.health == 5
+
+
+def test_entity_builder():
+    builder = EntityBuilder()
+    grass = builder.add_entity(
+        (20, 30),
+        name="Grass",
+    )
+    herbivore: Herbivore = builder.add_entity(
+        (21, 3),
+        name="Herbivore",
+    )
+    predator: Predator = builder.add_entity(
+        (40, 23),
+        name="Predator",
+    )
+    assert grass.name == "Grass"
+    assert herbivore.name == "Herbivore"
+    assert herbivore.target_name == "Grass"
+    assert predator.attack_rate == 4
+    assert herbivore.direction in list(Direction)

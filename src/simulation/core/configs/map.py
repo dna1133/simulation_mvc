@@ -8,6 +8,6 @@ class MapSettings(BaseSettings):
         "Grass": 20,
         "Rock": 10,
         "Tree": 10,
-        "Herbivore": 10,
+        "Herbivore": 15,
         "Predator": 10,
     }

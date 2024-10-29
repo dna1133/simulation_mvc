@@ -1,6 +1,6 @@
 from simulation.domain.entity.creatures import Direction, Herbivore
 from simulation.domain.entity.landscape import Rock
-from simulation.interfaces.domain.entity_dto import EntityDTO
+from simulation.app.entity_dto import EntityDTO
 
 
 def test_herbivore_to_dto_success():
