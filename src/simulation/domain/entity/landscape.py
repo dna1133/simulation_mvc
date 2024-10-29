@@ -4,7 +4,8 @@ from simulation.domain.entity.base import Entity
 
 
 @dataclass
-class Grass(Entity): ...
+class Grass(Entity):
+    hp: int
 
 
 @dataclass
