@@ -1,5 +1,3 @@
-from typing import Protocol
-
 from simulation.domain.entity.base import Entity
 from simulation.domain.entity.creatures import Direction, Herbivore, Predator
 from simulation.domain.entity.landscape import Grass, Rock, Tree

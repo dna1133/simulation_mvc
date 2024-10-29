@@ -31,7 +31,7 @@ def test_map_create(mock_creature_stats):
     map.create_map()
     assert isinstance(map._filled_cells, set)
     assert isinstance(map.cells, list)
-    assert len(map) == settings.MAP_HEIGHT * settings.MAP_WIDTH
+    assert len(map) == (settings.MAP_HEIGHT * settings.MAP_WIDTH)
     for i in range(len(map)):
         if isinstance(map.cells[i].contain, Predator):
             assert map.cells[i].contain.name == "Predator"

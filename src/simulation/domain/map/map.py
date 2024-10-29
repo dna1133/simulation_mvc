@@ -35,7 +35,7 @@ class BaseMap(ABC):
     cells: list[Cell] = field(default_factory=list)
 
 
-@lru_cache(1)
+# @lru_cache(1)
 @dataclass
 class Map(BaseMap):
     _filled_cells = set()
