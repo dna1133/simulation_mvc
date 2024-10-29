@@ -15,30 +15,32 @@ class Direction(Enum):
 
 @dataclass
 class Creature(Entity, ABC):
-    hp: int
-    speed: int
-    target: str
-    attack_rate: int
-    direction: Direction
+    health: int | None = None
+    speed: int | None = None
+    target_name: str | None = None
+    attack_rate: int | None = None
+    direction: Direction | None = None
 
-    @abstractmethod
     def move(self):
-        step_x, step_y = self.direction * self.speed
-        self.x_pos += step_x
-        self.y_pos += step_y
+        step_x, step_y = self.direction.value
+        self.x_pos += step_x * self.speed
+        self.y_pos += step_y * self.speed
 
     @abstractmethod
-    def attack(self, target: Grass):
-        target.hp -= self.attack_rate
-        if target.hp < 0:
-            target.destroy()
+    def attack(self): ...
 
 
 @dataclass
 class Herbivore(Creature):
-    def attack(self, target: Grass): ...
+    def attack(self, target: Grass):
+        target.health -= self.attack_rate
+        if target.health < 0:
+            target.destroy()
 
 
 @dataclass
 class Predator(Creature):
-    def attack(self, target: Herbivore): ...
+    def attack(self, target: Herbivore):
+        target.health -= self.attack_rate
+        if target.health < 0:
+            target.destroy()

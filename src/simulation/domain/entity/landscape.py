@@ -5,7 +5,7 @@ from simulation.domain.entity.base import Entity
 
 @dataclass
 class Grass(Entity):
-    hp: int
+    health: int | None = None
 
 
 @dataclass
