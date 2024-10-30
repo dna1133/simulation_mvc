@@ -22,8 +22,8 @@ class EntitySettings(BaseSettings):
         "Grass": 0,
         "Rock": 0,
         "Tree": 0,
-        "Herbivore": 10,
-        "Predator": 15,
+        "Herbivore": 1,
+        "Predator": 2,
     }
     ENTITY_ATTACK_RATE: dict[str, int] = {
         "Grass": 0,
