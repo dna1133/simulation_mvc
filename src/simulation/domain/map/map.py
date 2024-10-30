@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 from random import randint
 
+# from simulation.app.map_dto import MapDTO
 from simulation.domain.entity.base import Entity
 
 from simulation.core.configs import settings
@@ -30,21 +31,20 @@ class Cell(BaseCell):
         return f"{self.x_pos=}, {self.y_pos=}, {self.contain=}"
 
 
-@dataclass(kw_only=True)
-class BaseMap(ABC):
-    cells: list[Cell] = field(default_factory=list)
-
-
 # @lru_cache(1)
 @dataclass
-class Map(BaseMap):
+class Map:
+    cells: list[Cell] = field(default_factory=list)
     _filled_cells = set()
     _entity_cells = dict()
 
-    def create_map(self):
-        self._generate_entity_positions()
-        for y_pos in range(settings.MAP_HEIGHT):
-            for x_pos in range(settings.MAP_WIDTH):
+    def create_map(
+        self, width: int = settings.MAP_WIDTH, height: int = settings.MAP_HEIGHT
+    ):
+        if not self._filled_cells:
+            self._generate_entity_positions()
+        for y_pos in range(height):
+            for x_pos in range(width):
                 pos = (x_pos, y_pos)
                 if pos in self._entity_cells:
                     self.cells.append(
@@ -62,17 +62,36 @@ class Map(BaseMap):
                         )
                     )
 
-    def _random_position(self):
-        return (randint(0, settings.MAP_WIDTH), randint(0, settings.MAP_HEIGHT))
+    def _random_position(
+        self, width: int = settings.MAP_WIDTH, height: int = settings.MAP_HEIGHT
+    ):
+        return (randint(0, width), randint(0, height))
 
-    def _generate_entity_positions(self):
-        entity_position = (20, 20)
-        for entity_name in settings.ENTITIES_ON_MAP:
-            for i in range(settings.ENTITIES_ON_MAP[entity_name]):
+    def _generate_entity_positions(
+        self,
+        start_position: tuple = (20, 20),
+        entities_on_map: dict = settings.ENTITIES_ON_MAP,
+        width: int = settings.MAP_WIDTH,
+        height: int = settings.MAP_HEIGHT,
+    ):
+        entity_position = start_position
+        for entity_name in entities_on_map:
+            for i in range(entities_on_map[entity_name]):
                 while entity_position in self._filled_cells:
-                    entity_position = self._random_position()
+                    entity_position = self._random_position(width, height)
                 self._filled_cells.add(entity_position)
                 self._entity_cells[entity_position] = entity_name
 
     def __len__(self):
         return len(self.cells)
+
+    # def _map_from_entities(self) -> "Map":
+    #     for cell in self.cells:
+    #         if not cell.is_empty():
+    #             cell.x_pos = cell.contain.x_pos
+    #             cell.y_pos = cell.contain.y_pos
+
+    # def update_map(self, new_state_dto: dict | None = None) -> "Map":
+    #     if new_state_dto:
+    #         return MapDTO.dto_to_map(new_state_dto)
+    #     return self
