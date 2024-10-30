@@ -50,6 +50,48 @@ class Game:
                         return cell
         return None
 
+    def _chose_direction(self, entity: Creature) -> Cell:
+        cell = self._scan_target(entity)
+        if cell:
+            entity.direction = PathFinder.find_direction(
+                (cell.x_pos, cell.y_pos), entity.direction.value
+            )
+            if self._check_direction(entity.x_pos, entity.y_pos):
+                return cell
+        step_x, step_y = entity.direction.value
+        pos_x = entity.x_pos + step_x * entity.speed
+        pos_y = entity.y_pos + step_y * entity.speed
+        cell = self.map_obj.cell_from_position((pos_x, pos_y))
+        return cell
+
+    def _check_direction(self, x_pos, y_pos) -> bool:
+        cell = self.map_obj.cell_from_position((x_pos, y_pos))
+        if cell:
+            if cell.is_empty():
+                return True
+        return False
+
+    # def _entity_move(self, entity: Creature):
+    #     cell = self._chose_direction(entity)
+    #     # old_pos_x, old_pos_y = entity.x_pos, entity.y_pos
+    #     entity.move()
+    #     new_pos_x, new_pos_y = entity.x_pos, entity.y_pos
+    #     new_cell = self.map_obj.cell_from_position((new_pos_x, new_pos_y))
+    #     if isinstance(cell, Cell) and isinstance(new_cell, Cell):
+    #         cell.contain = None
+    #         new_cell.contain = entity
+    #     self._check_duubles()
+
+    def _check_duubles(self):
+        for check_cell in self.map_obj.cells:
+            if not check_cell.is_empty():
+                if (
+                    check_cell.x_pos != check_cell.contain.x_pos
+                    or check_cell.y_pos != check_cell.contain.y_pos
+                ):
+                    check_cell.x_pos = check_cell.contain.x_pos
+                    check_cell.y_pos = check_cell.contain.y_pos
+
     def _entity_move(self, entity: Creature) -> bool:
         cell = self._scan_target(entity)
         if cell:
@@ -70,7 +112,7 @@ class Game:
                         entity.x_pos,
                         entity.y_pos,
                         direction=entity.direction,
-                        strength=1000,
+                        strength=100,
                     )
                     for check_cell in self.map_obj.cells:
                         if not check_cell.is_empty():
