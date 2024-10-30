@@ -27,7 +27,7 @@ class Creature(Entity, ABC):
         self.y_pos += step_y * self.speed
 
     @abstractmethod
-    def attack(self): ...
+    def attack(self, target: Entity): ...
 
 
 @dataclass

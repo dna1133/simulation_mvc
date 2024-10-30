@@ -1,7 +1,5 @@
 import time
 
-from dataclasses import dataclass
-
 from simulation.app.map_dto import MapDTO
 from simulation.core.configs import settings
 from simulation.domain.entity.creatures import Creature
@@ -58,7 +56,6 @@ class Game:
             entity.direction = PathFinder.find_direction(
                 (cell.x_pos, cell.y_pos), entity.direction.value
             )
-            print(f"Target found = {cell.contain.name}")
             return True
         entity.direction = PathFinder.choose_direction(
             entity.x_pos, entity.y_pos, entity.direction
@@ -85,6 +82,8 @@ class Game:
         cell = self._scan_target(entity, fov_depth=2)
         if cell:
             entity.attack(cell.contain)
+            if cell.contain.x_pos == None:
+                cell.contain = None
             return True
         return False
 
