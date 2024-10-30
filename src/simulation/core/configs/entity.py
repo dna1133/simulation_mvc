@@ -12,11 +12,11 @@ class EntitySettings(BaseSettings):
         "Predator",
     ]
     ENTITY_HEALTH: dict[str, int] = {
-        "Grass": 20,
+        "Grass": 4,
         "Rock": 10,
         "Tree": 10,
-        "Herbivore": 10,
-        "Predator": 10,
+        "Herbivore": 12,
+        "Predator": 15,
     }
     ENTITY_SPEED: dict[str, int] = {
         "Grass": 0,

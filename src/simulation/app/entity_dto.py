@@ -33,8 +33,6 @@ class EntityDTO:
             stats["stats"]["target_name"] = entity.target_name
             stats["stats"]["attack_rate"] = entity.attack_rate
             stats["stats"]["direction"] = entity.direction.value
-        else:
-            raise ApplicationException()
         return stats
 
     @staticmethod

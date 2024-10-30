@@ -19,7 +19,7 @@ def mock_creature_stats():
 
 def test_cell_create_success(mock_creature_stats):
     predator = Predator(**mock_creature_stats)
-    cell = Cell(x_pos=1, y_pos=11, contain=predator)
+    cell = Cell(x_pos=1, y_pos=11, _contain=predator)
     assert cell.contain == predator
     assert cell.contain.health == 10
     assert cell.is_empty() == False

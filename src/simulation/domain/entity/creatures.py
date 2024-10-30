@@ -19,7 +19,7 @@ class Creature(Entity, ABC):
     speed: int | None = None
     target_name: str | None = None
     attack_rate: int | None = None
-    direction: Direction | None = None
+    direction: Direction = Direction.DOWN
 
     def move(self):
         step_x, step_y = self.direction.value
@@ -34,13 +34,9 @@ class Creature(Entity, ABC):
 class Herbivore(Creature):
     def attack(self, target: Grass):
         target.health -= self.attack_rate
-        if target.health < 0:
-            target.destroy()
 
 
 @dataclass
 class Predator(Creature):
     def attack(self, target: Herbivore):
         target.health -= self.attack_rate
-        if target.health < 0:
-            target.destroy()

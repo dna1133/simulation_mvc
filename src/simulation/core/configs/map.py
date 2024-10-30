@@ -2,12 +2,12 @@ from pydantic_settings import BaseSettings
 
 
 class MapSettings(BaseSettings):
-    MAP_WIDTH: int = 128
-    MAP_HEIGHT: int = 64
+    MAP_WIDTH: int = 21
+    MAP_HEIGHT: int = 21
     ENTITIES_ON_MAP: dict[str, int] = {
-        "Grass": 20,
-        "Rock": 10,
-        "Tree": 10,
-        "Herbivore": 15,
-        "Predator": 10,
+        "Grass": 10,
+        "Rock": 5,
+        "Tree": 5,
+        "Herbivore": 5,
+        "Predator": 3,
     }

@@ -10,7 +10,7 @@ from simulation.services.path_finder import PathFinder
 class Game:
     def __init__(self):
         self.turn: int = 1
-        self.paused: bool = True
+        self.paused: bool = False
         self.map_obj: Map
 
     def start_game(self, map_dto: dict | None = None) -> None:
@@ -19,7 +19,7 @@ class Game:
         else:
             self.map_obj = Map()
             self.map_obj.create_map()
-        self.game_loop()
+        # self.game_loop()
 
     def current_state_to_dto(self, map_obj: Map) -> dict:
         return MapDTO.map_to_dto(map_obj)
@@ -56,41 +56,52 @@ class Game:
             entity.direction = PathFinder.find_direction(
                 (cell.x_pos, cell.y_pos), entity.direction.value
             )
-            return True
-        entity.direction = PathFinder.choose_direction(
-            entity.x_pos, entity.y_pos, entity.direction
-        )
-        current_pos_x, current_pos_y = entity.x_pos, entity.y_pos
+        old_pos_x, old_pos_y = entity.x_pos, entity.y_pos
         entity.move()
         new_pos_x, new_pos_y = entity.x_pos, entity.y_pos
-        for cell in self.map_obj.cells:
-            if (cell.x_pos, cell.y_pos) == (current_pos_x, current_pos_y):
-                temp_cell = cell
-            if (cell.x_pos, cell.y_pos) == (new_pos_x, new_pos_y):
-                if not cell.is_empty():
-                    entity.x_pos, entity.y_pos = current_pos_x, current_pos_y
+
+        for new_cell in self.map_obj.cells:
+            if (new_cell.x_pos, new_cell.y_pos) == (new_pos_x, new_pos_y):
+                if not cell:
+                    cell = new_cell
+                if not new_cell.is_empty():
+                    entity.x_pos, entity.y_pos = old_pos_x, old_pos_y
                     entity.direction = PathFinder.choose_direction(
-                        entity.x_pos, entity.y_pos, strength=1000
+                        entity.x_pos,
+                        entity.y_pos,
+                        direction=entity.direction,
+                        strength=1000,
                     )
+                    for check_cell in self.map_obj.cells:
+                        if not check_cell.is_empty():
+                            if (
+                                check_cell.x_pos != check_cell.contain.x_pos
+                                or check_cell.y_pos != check_cell.contain.y_pos
+                            ):
+                                check_cell.x_pos = check_cell.contain.x_pos
+                                check_cell.y_pos = check_cell.contain.y_pos
                     return True
                 else:
-                    temp_cell.contain = None
-                    cell.contain = entity
+                    cell.contain = None
+                    new_cell.contain = entity
+                    for check_cell in self.map_obj.cells:
+                        if not check_cell.is_empty():
+                            if (
+                                check_cell.x_pos != check_cell.contain.x_pos
+                                or check_cell.y_pos != check_cell.contain.y_pos
+                            ):
+                                check_cell.x_pos = check_cell.contain.x_pos
+                                check_cell.y_pos = check_cell.contain.y_pos
                     return False
 
     def _entity_attack(self, entity: Creature) -> bool:
         cell = self._scan_target(entity, fov_depth=2)
         if cell:
             entity.attack(cell.contain)
-            if cell.contain.x_pos == None:
+            if cell.contain.health < 0:
                 cell.contain = None
             return True
         return False
 
     def pause_simulation(self) -> None:
         self.paused = True
-
-    def game_loop(self) -> None:
-        while not self.paused:
-            time.sleep(settings.TIME_TO_TICK)
-            self.next_turn()

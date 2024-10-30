@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 from random import randint
 
-# from simulation.app.map_dto import MapDTO
 from simulation.domain.entity.base import Entity
 
 from simulation.core.configs import settings
@@ -14,7 +13,7 @@ from simulation.domain.entity.entity_builder import EntityBuilder
 class BaseCell(ABC):
     x_pos: int
     y_pos: int
-    contain: Entity | None = None
+    _contain: Entity | None = None
 
     @abstractmethod
     def is_empty(self) -> bool: ...
@@ -22,6 +21,14 @@ class BaseCell(ABC):
 
 @dataclass
 class Cell(BaseCell):
+    @property
+    def contain(self) -> Entity:
+        return self._contain
+
+    @contain.setter
+    def contain(self, entity: Entity | None) -> None:
+        self._contain = entity
+
     def is_empty(self) -> bool:
         if self.contain:
             return False
@@ -85,13 +92,7 @@ class Map:
     def __len__(self):
         return len(self.cells)
 
-    # def _map_from_entities(self) -> "Map":
-    #     for cell in self.cells:
-    #         if not cell.is_empty():
-    #             cell.x_pos = cell.contain.x_pos
-    #             cell.y_pos = cell.contain.y_pos
-
-    # def update_map(self, new_state_dto: dict | None = None) -> "Map":
-    #     if new_state_dto:
-    #         return MapDTO.dto_to_map(new_state_dto)
-    #     return self
+    def cell_from_position(self, position: tuple[int, int]) -> Cell:
+        for cell in self.cells:
+            if (cell.x_pos, cell.y_pos) == position:
+                return cell

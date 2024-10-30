@@ -22,8 +22,19 @@ class PathFinder:
         # Проходим по каждому уровню глубины, начиная от 1 до fov_depth
         for depth in range(1, fov_depth + 1):
             # Текущая позиция на глубине поиска
-            base_x = x_position + dx * depth
-            base_y = y_position + dy * depth
+            try:
+                base_x = x_position + dx * depth
+            except TypeError:
+                base_x = dx * depth
+            # print(type(x_position), x_position)
+            # if x_position != None:
+            #     base_x = x_position + dx * depth
+            # else:
+            #     base_x = dx * depth
+            if y_position != None:
+                base_y = y_position + dy * depth
+            else:
+                base_y = dy * depth
 
             # В зависимости от глубины определяем "ширину" конуса
             for offset in range(-depth, depth + 1):
@@ -51,6 +62,9 @@ class PathFinder:
         strength: int = settings.SERVICES_PATH_RANDOM_STRENTH,
     ) -> Direction:
         dx, dy = direction.value
+        if x_position == None:
+            x_position = 0
+            y_position = 0
 
         # Проверка, что новое направление не выходит за границы карты
         def is_within_bounds(x, y, dx, dy, max_x, max_y):

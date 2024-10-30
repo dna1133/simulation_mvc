@@ -8,6 +8,7 @@ from simulation.core.configs import settings
 class Entity(ABC):
     x_pos: int
     y_pos: int
+    destroyed: bool = False
     _img: str | None = None
 
     @property
@@ -25,8 +26,7 @@ class Entity(ABC):
         self._img = image
 
     def destroy(self) -> None:
-        self.x_pos = None
-        self.y_pos = None
+        self.destroyed = True
 
     def __str__(self):
         return self.name
